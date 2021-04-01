@@ -19,7 +19,9 @@ parser.add_argument('--seed', type=int, default=1,
                     help='random seed')
 
 # Data specifications
-parser.add_argument('--dir_data', type=str, default='/home/yulun/data/PyTorch/npy',
+parser.add_argument('--dir_data', type=str, default='../../../dataset',
+                    help='dataset directory')
+parser.add_argument('--dir_exp', type=str, default='../experiments',
                     help='dataset directory')
 parser.add_argument('--dir_demo', type=str, default='../test',
                     help='demo image directory')
@@ -134,6 +136,8 @@ parser.add_argument('--print_every', type=int, default=100,
                     help='how many batches to wait before logging training status')
 parser.add_argument('--save_results', action='store_true',
                     help='save output results')
+parser.add_argument('--data_range', type=str, default='1-800/801-810',
+                    help='train/test data range')
 
 # New options
 parser.add_argument('--n_resgroups', type=int, default=10,
@@ -147,11 +151,26 @@ parser.add_argument('--testset', type=str, default='Set5',
 parser.add_argument('--degradation', type=str, default='BI',
                     help='degradation model: BI, BD')
 
-                    
+parser.add_argument('--betas', type=tuple, default=(0.9, 0.999),
+                    help='ADAM beta')
+parser.add_argument('--decay', type=str, default='200-350-500-650',
+                    help='learning rate decay type')
+
+parser.add_argument('--scheduler', default='StepLR',
+                    choices=('StepLR', 'CosLR'),
+                    help='scheduler to use (StepLR | CosLR)') 
+parser.add_argument('--remove_results', action='store_true',
+                    help='not save output results')
+parser.add_argument('--save_gt', action='store_true',
+                    help='save low-resolution and high-resolution images together')
+
+
+
 args = parser.parse_args()
 template.set_template(args)
 
 args.scale = list(map(lambda x: int(x), args.scale.split('+')))
+args.data_test = list(args.data_test.split('+'))
 
 if args.epochs == 0:
     args.epochs = 1e8

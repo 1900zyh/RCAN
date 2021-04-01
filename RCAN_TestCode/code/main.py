@@ -1,6 +1,6 @@
 import torch
 
-import utility
+from utils import utility
 import data
 import model
 import loss
